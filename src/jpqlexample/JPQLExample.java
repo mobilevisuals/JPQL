@@ -44,14 +44,14 @@ public class JPQLExample {
         // Find the average X value:
         Query q2 = em.createQuery("SELECT AVG(p.x) FROM Point p");
         System.out.println("Average X: " + q2.getSingleResult());
-     
+        j.getAll(em);
+         j.getByX(em, 225);
 
         // Close the database connection:
         em.close();
         emf.close();
 
-        //j.getAll(em);
-        // j.getByX(em, 225);
+     
     }
 
     Point getPointbyX(int id, EntityManager em) {
@@ -84,39 +84,40 @@ public class JPQLExample {
 
         try {
             EntityTransaction entr = em.getTransaction();
+            if (!em.getTransaction().isActive())
             entr.begin();
             Query query = em.createNamedQuery("BookAuthor.findAll");
-            List authorList = query.getResultList();
-            Iterator authorIterator = authorList.iterator();
-            while (authorIterator.hasNext()) {
-                Point point = (Point) authorIterator.next();
+            List list = query.getResultList();
+            Iterator iterator = list.iterator();
+            while (iterator.hasNext()) {
+                Point point = (Point) iterator.next();
                 System.out.print(point);
                 System.out.println();
             }
         } catch (Exception ex) {
-            System.err.println(ex);
+           em.getTransaction().rollback();
         }
-        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     }
 
     void getByX(EntityManager em, int x) {
 
         try {
             EntityTransaction entr = em.getTransaction();
+            if (!em.getTransaction().isActive())
             entr.begin();
             Query query = em.createNamedQuery("BookAuthor.findByX");
             query.setParameter("x", 3);
-            List authorList = query.getResultList();
-            Iterator authorIterator = authorList.iterator();
-            while (authorIterator.hasNext()) {
-                Point point = (Point) authorIterator.next();
+            List list = query.getResultList();
+            Iterator iterator = list.iterator();
+            while (iterator.hasNext()) {
+                Point point = (Point) iterator.next();
                 System.out.print(point);
                 System.out.println();
             }
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        System.out.println("^^^^^^^^^^^^^xxxxxxx^^^^^^^^^^^^^^");
+     
     }
 }
 
